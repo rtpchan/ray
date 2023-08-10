@@ -8,7 +8,7 @@ import (
 )
 
 func TestChain(t *testing.T) {
-	p := PointM(1, 0, 1)
+	p := PointV(1, 0, 1)
 	a := RotateXM(math.Pi / 2.0)
 	b := ScaleM(5, 5, 5)
 	c := TranslateM(10, 5, 7)
@@ -18,7 +18,7 @@ func TestChain(t *testing.T) {
 	ib.Mul(c, ia)
 	tt := ZeroVector()
 	tt.MulVec(ib, p)
-	r := PointM(15, 0, 7)
+	r := PointV(15, 0, 7)
 	if !mat.EqualApprox(tt, r, 0.00000001) {
 		t.Errorf("Transformation Chaining, got %v", r)
 	}
