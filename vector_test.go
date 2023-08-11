@@ -17,7 +17,7 @@ func TestVector(t *testing.T) {
 	b := VectorV(0, 3./5., 4./5.)
 	// c := VectorM(0, 0, 0)
 	// c.ScaleVec(1./a.Norm(2), a)
-	c := NormalisationV(a)
+	c := NormaliseV(a)
 	if !mat.EqualApprox(c, b, 0.0001) {
 		t.Errorf("Vector Normalisation, got %v", c)
 	}

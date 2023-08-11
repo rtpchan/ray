@@ -40,7 +40,7 @@ func MagnitudeV(v *mat.VecDense) float64 {
 	return v.Norm(2)
 }
 
-func NormalisationV(v *mat.VecDense) *mat.VecDense {
+func NormaliseV(v *mat.VecDense) *mat.VecDense {
 	// c := VectorM(0, 0, 0)
 	var c mat.VecDense
 	c.ScaleVec(1./v.Norm(2), v)
