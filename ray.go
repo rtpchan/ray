@@ -34,7 +34,7 @@ func (r *Ray) Transform(m *mat.Dense) *Ray {
 	return NewRay(np, nv)
 }
 
-func IntersectRaySphere(r *Ray, s *Sphere) []Intersection {
+func IntersectRaySphere(r *Ray, s *Sphere) Intersections {
 	invM := ZeroMatrix()
 	invM.Inverse(s.Transform)
 	r = r.Transform(invM)
