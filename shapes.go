@@ -26,3 +26,8 @@ func (s *Sphere) ShapeID() int {
 func (s *Sphere) SetTransform(m *mat.Dense) {
 	s.Transform = m
 }
+
+func (s *Sphere) NormalAt(p *mat.VecDense) *mat.VecDense {
+	objectP := MulV(InverseM(s.Transform), p)
+	return NormaliseV(SubV(objectP, s.Origin))
+}

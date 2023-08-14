@@ -47,6 +47,12 @@ func NormaliseV(v *mat.VecDense) *mat.VecDense {
 	return &c
 }
 
+func MulV(m *mat.Dense, v *mat.VecDense) *mat.VecDense {
+	p := PointV(0, 0, 0)
+	p.MulVec(m, v)
+	return p
+}
+
 func DotV(a, b *mat.VecDense) float64 {
 	return mat.Dot(a, b)
 }

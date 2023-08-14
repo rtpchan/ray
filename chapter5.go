@@ -1,11 +1,12 @@
 package main
 
-func RedCircle() {
+func Chapter5() {
 
 	canvas := NewCanvas(101, 101)
 
 	rayOrigin := PointV(0, 0, -5)
 	s := NewSphere(0, 0, 0, 1)
+	s.Transform = ScaleM(0.5, 1, 1)
 	wallWidth := 10.
 	wallHeight := 10.
 

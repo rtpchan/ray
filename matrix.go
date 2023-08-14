@@ -11,6 +11,15 @@ func Identity() *mat.Dense {
 	return a
 }
 
+func InverseM(m *mat.Dense) *mat.Dense {
+	invM := ZeroMatrix()
+	err := invM.Inverse(m)
+	if err != nil {
+		return Identity()
+	}
+	return invM
+}
+
 // 4x4 matrix filled with zero
 func ZeroMatrix() *mat.Dense {
 	return mat.NewDense(4, 4, []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
