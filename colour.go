@@ -78,3 +78,10 @@ func (c Colour) RGB8String() string {
 		ClampRGB8(int(math.Round(c.G()*255))),
 		ClampRGB8(int(math.Round(c.B()*255))))
 }
+
+func ColourApprox(c, d Colour, tol float64) bool {
+	deltaR := math.Abs(c.c[0] - d.c[0])
+	deltaG := math.Abs(c.c[1] - d.c[1])
+	deltaB := math.Abs(c.c[2] - d.c[2])
+	return deltaR < tol && deltaG < tol && deltaB < tol
+}

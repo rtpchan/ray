@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"testing"
 
 	"gonum.org/v1/gonum/mat"
@@ -37,5 +38,14 @@ func TestVector(t *testing.T) {
 	k := VectorV(1, -2, 1)
 	if !mat.Equal(k, n) {
 		t.Errorf("Vector Cross Product, got %v", n)
+	}
+}
+
+func TestVectorReflect(t *testing.T) {
+	v := VectorV(0, -1, 0)
+	n := VectorV(math.Sqrt2/2, math.Sqrt2/2, 0)
+	r := ReflectV(v, n)
+	if !mat.EqualApprox(VectorV(1, 0, 0), r, 0.0001) {
+		t.Errorf("Vector Reflection, shoulbe %v, got %v", VectorV(1, 0, 0), r)
 	}
 }

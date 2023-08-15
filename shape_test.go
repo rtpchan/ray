@@ -43,5 +43,4 @@ func TestSphereNormalTransform(t *testing.T) {
 	if !mat.EqualApprox(n, VectorV(0, 0.70711, -0.70711), 0.001) {
 		t.Errorf("Sphere Normal, should be (0,0.70711,-0.70711), got %v", n)
 	}
-
 }

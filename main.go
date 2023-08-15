@@ -14,5 +14,5 @@ func init() {
 
 func main() {
 	fmt.Println("ray tracing")
-	Chapter5()
+	Chapter6()
 }

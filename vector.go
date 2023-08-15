@@ -53,6 +53,13 @@ func MulV(m *mat.Dense, v *mat.VecDense) *mat.VecDense {
 	return p
 }
 
+// multiply tranposed m to v
+func MulTranposeMV(m *mat.Dense, v *mat.VecDense) *mat.VecDense {
+	p := PointV(0, 0, 0)
+	p.MulVec(m.T(), v)
+	return p
+}
+
 func DotV(a, b *mat.VecDense) float64 {
 	return mat.Dot(a, b)
 }
@@ -64,4 +71,8 @@ func CrossV(a, b *mat.VecDense) *mat.VecDense {
 	c.SetVec(2, a.AtVec(0)*b.AtVec(1)-a.AtVec(1)*b.AtVec(0))
 
 	return c
+}
+
+func ReflectV(in, normal *mat.VecDense) *mat.VecDense {
+	return SubV(in, ScaleV(2.*DotV(in, normal), normal))
 }

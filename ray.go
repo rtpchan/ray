@@ -14,8 +14,10 @@ type Ray struct {
 // Define origin x, y, z, and direction i, j k
 func NewRayCoor(x, y, z, i, j, k float64) *Ray {
 	o := PointV(x, y, z)
-	// d := NormaliseV(VectorV(i, j, k))   // do not normalise, (for world space ?, page 69)
-	return &Ray{Origin: o, Dir: VectorV(i, j, k)}
+	d := NormaliseV(VectorV(i, j, k)) // do not normalise, (for world space ?, page 69)
+	// return &Ray{Origin: o, Dir: VectorV(i, j, k)}
+	return &Ray{Origin: o, Dir: d}
+
 }
 
 func NewRay(o *mat.VecDense, d *mat.VecDense) *Ray {

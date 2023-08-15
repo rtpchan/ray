@@ -11,12 +11,15 @@ type Sphere struct {
 	Origin    *mat.VecDense
 	Radius    float64
 	Transform *mat.Dense
+	Material  *Material
 }
 
 func NewSphere(x, y, z, r float64) *Sphere {
-	o := PointV(x, y, z)
+	// o := PointV(x, y, z)
+	o := PointV(0, 0, 0)
 
-	return &Sphere{ID: idgen.NewID(), Origin: o, Radius: r, Transform: Identity()}
+	// return &Sphere{ID: idgen.NewID(), Origin: o, Radius: r, Transform: Identity()}
+	return &Sphere{ID: idgen.NewID(), Origin: o, Radius: 1.0, Transform: Identity()}
 }
 
 func (s *Sphere) ShapeID() int {
@@ -27,7 +30,11 @@ func (s *Sphere) SetTransform(m *mat.Dense) {
 	s.Transform = m
 }
 
+// Get normal of a point on a sphere, see Chapter 6 Page 82
 func (s *Sphere) NormalAt(p *mat.VecDense) *mat.VecDense {
 	objectP := MulV(InverseM(s.Transform), p)
-	return NormaliseV(SubV(objectP, s.Origin))
+	objectN := SubV(objectP, s.Origin)
+	worldN := MulTranposeMV(InverseM(s.Transform), objectN)
+	worldN.SetVec(3, 0.0)
+	return NormaliseV(worldN)
 }
