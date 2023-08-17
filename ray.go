@@ -36,12 +36,12 @@ func (r *Ray) Transform(m *mat.Dense) *Ray {
 	return NewRay(np, nv)
 }
 
-func IntersectRaySphere(r *Ray, s *Sphere) Intersections {
+func IntersectRaySphere(r *Ray, s Shape) Intersections {
 	invM := ZeroMatrix()
-	invM.Inverse(s.Transform)
+	invM.Inverse(s.GetTransform())
 	r = r.Transform(invM)
 
-	rs := SubV(r.Origin, s.Origin)
+	rs := SubV(r.Origin, s.GetOrigin())
 	a := DotV(r.Dir, r.Dir)
 	b := 2. * DotV(r.Dir, rs)
 	c := DotV(rs, rs) - 1

@@ -4,6 +4,10 @@ import "gonum.org/v1/gonum/mat"
 
 type Shape interface {
 	ShapeID() int
+	NormalAt(*mat.VecDense) *mat.VecDense
+	GetOrigin() *mat.VecDense
+	GetTransform() *mat.Dense
+	GetMaterial() *Material
 }
 
 type Sphere struct {
@@ -24,6 +28,18 @@ func NewSphere(x, y, z, r float64) *Sphere {
 
 func (s *Sphere) ShapeID() int {
 	return s.ID
+}
+
+func (s *Sphere) GetOrigin() *mat.VecDense {
+	return s.Origin
+}
+
+func (s *Sphere) GetTransform() *mat.Dense {
+	return s.Transform
+}
+
+func (s *Sphere) GetMaterial() *Material {
+	return s.Material
 }
 
 func (s *Sphere) SetTransform(m *mat.Dense) {

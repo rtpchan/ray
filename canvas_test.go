@@ -72,5 +72,5 @@ func TestCanvasPPM2(t *testing.T) {
 	if s != output {
 		t.Errorf("Write PPM String, should get %s, got %s", output, s)
 	}
-	// cv.WritePPM("test.ppm")
+	// cv.WritePPM("canvas_test.ppm")
 }
