@@ -29,3 +29,9 @@ func ZeroMatrix() *mat.Dense {
 func ZeroVector() *mat.VecDense {
 	return mat.NewVecDense(4, []float64{0, 0, 0, 0})
 }
+
+func MulM(m, n *mat.Dense) *mat.Dense {
+	mulM := ZeroMatrix()
+	mulM.Mul(m, n)
+	return mulM
+}

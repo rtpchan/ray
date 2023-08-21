@@ -22,8 +22,8 @@ func NewSphere(x, y, z, r float64) *Sphere {
 	// o := PointV(x, y, z)
 	o := PointV(0, 0, 0)
 
-	// return &Sphere{ID: idgen.NewID(), Origin: o, Radius: r, Transform: Identity()}
-	return &Sphere{ID: idgen.NewID(), Origin: o, Radius: 1.0, Transform: Identity()}
+	// return &Sphere{ID: idgen.NewID(), Origin: o, Radius: r, Transform: Identity(), Material: NewMaterial()}
+	return &Sphere{ID: idgen.NewID(), Origin: o, Radius: 1.0, Transform: Identity(), Material: NewMaterial()}
 }
 
 func (s *Sphere) ShapeID() int {

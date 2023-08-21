@@ -57,9 +57,13 @@ func (w *World) ShadeHit(c *Comps) Colour {
 // get resulting colour for a ray from the eye
 func (w *World) ColourAt(r *Ray) Colour {
 	xs := w.Intersect(r)
-	if len(xs) > 0 {
-		c := PrepareComputation(xs[0], r)
-		return w.ShadeHit(c)
+	for _, x := range xs {
+		if x.T < 0 {
+			continue
+		} else {
+			c := PrepareComputation(x, r)
+			return w.ShadeHit(c)
+		}
 	}
 	return Black() // return black if no hit
 }
@@ -93,4 +97,20 @@ func PrepareComputation(i Intersection, r *Ray) *Comps {
 		c.NormalV = nv
 	}
 	return c
+}
+
+// Chapter 7 page 99, transform matrix to move the world to fit the camera
+func ViewTransform(from, to, up *mat.VecDense) *mat.Dense {
+	forward := NormaliseV(SubV(to, from))
+	left := CrossV(forward, NormaliseV(up))
+	trueUp := CrossV(left, forward)
+	backward := ScaleV(-1, forward)
+	orientation := mat.NewDense(4, 4, []float64{
+		left.AtVec(0), left.AtVec(1), left.AtVec(2), 0,
+		trueUp.AtVec(0), trueUp.AtVec(1), trueUp.AtVec(2), 0,
+		backward.AtVec(0), backward.AtVec(1), backward.AtVec(2), 0,
+		0, 0, 0, 1,
+	})
+	fromNeg := TranslateM(-from.AtVec(0), -from.AtVec(1), -from.AtVec(2))
+	return MulM(orientation, fromNeg)
 }
