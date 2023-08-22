@@ -5,7 +5,7 @@ import "math"
 // Ray report Intersection hit
 type Intersection struct {
 	T      float64
-	Object Shape
+	Object Shaper
 }
 
 type Intersections []Intersection

@@ -7,7 +7,7 @@ import (
 )
 
 type World struct {
-	Object []Shape
+	Object []Shaper
 	Light  []*PointLight
 }
 
@@ -18,15 +18,15 @@ func NewWorld() *World {
 func NewDefaultWorld() *World {
 	w := &World{}
 	w.Light = []*PointLight{NewPointLight(PointV(-10, 10, -10), NewColour(1, 1, 1))}
-	s1 := NewSphere(0, 0, 0, 1)
+	s1 := NewSphere()
 	m1 := NewMaterial()
 	m1.Colour = NewColour(0.8, 1.0, 0.6)
 	m1.Diffuse = 0.7
 	m1.Specular = 0.2
 	s1.Material = m1
-	s2 := NewSphere(0, 0, 0, 1)
+	s2 := NewSphere()
 	s2.Transform = ScaleM(0.5, 0.5, 0.5)
-	w.Object = []Shape{s1, s2}
+	w.Object = []Shaper{s1, s2}
 	return w
 }
 
@@ -34,7 +34,7 @@ func NewDefaultWorld() *World {
 func (w *World) Intersect(r *Ray) Intersections {
 	is := Intersections{}
 	for _, obj := range w.Object {
-		xs := IntersectRaySphere(r, obj)
+		xs := obj.Intersect(r)
 		if xs.Count() > 0 {
 			is = append(is, xs...)
 		}
@@ -85,7 +85,7 @@ func (w *World) IsShadow(p *mat.VecDense, l *PointLight) bool {
 
 type Comps struct {
 	T         float64
-	Object    Shape
+	Object    Shaper
 	Point     *mat.VecDense
 	EyeV      *mat.VecDense
 	NormalV   *mat.VecDense

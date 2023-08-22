@@ -7,7 +7,7 @@ func Chapter6() {
 	wallWidth := 10. // image target width & height
 	wallHeight := 10.
 
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	m := NewMaterial()
 	m.Colour = NewColour(1, 0.2, 1)
 	s.Material = m
@@ -24,7 +24,7 @@ func Chapter6() {
 
 			// log.Println(dir)
 			r := NewRay(eyePos, dir)
-			xs := IntersectRaySphere(r, s)
+			xs := s.Intersect(r)
 			hit := xs.Hit()
 			if len(hit) == 0 {
 				canvas.Write(NewColour(0, 0, 0), wc, hc)

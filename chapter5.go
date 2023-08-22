@@ -5,7 +5,7 @@ func Chapter5() {
 	canvas := NewCanvas(101, 101)
 
 	rayOrigin := PointV(0, 0, -5)
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	s.Transform = CT(ScaleM(0.5, 1, 1), TranslateM(2, 0, 0))
 	wallWidth := 10.
 	wallHeight := 10.
@@ -20,7 +20,7 @@ func Chapter5() {
 
 			// log.Println(dir)
 			r := NewRay(rayOrigin, dir)
-			xs := IntersectRaySphere(r, s)
+			xs := s.Intersect(r)
 			hit := xs.Hit()
 			if len(hit) == 0 {
 				canvas.Write(NewColour(0, 0, 0), wc, hc)

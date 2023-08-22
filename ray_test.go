@@ -23,20 +23,20 @@ func TestRay(t *testing.T) {
 
 func TestRaySphere(t *testing.T) {
 	r := NewRayCoor(0, 0, 0, 0, 0, 1)
-	s := NewSphere(0, 0, 0, 2)
-	x := IntersectRaySphere(r, s)
+	s := NewSphere()
+	x := s.Intersect(r)
 	if x[0].T != -1 || x[1].T != 1 {
 		t.Errorf("Ray Sphere intersection at -1, 1, got %0.2f, %0.2f", x[0].T, x[1].T)
 	}
 	r2 := NewRayCoor(0, 0, 5, 0, 0, 1)
-	s2 := NewSphere(0, 0, 0, 2)
-	x2 := IntersectRaySphere(r2, s2)
+	s2 := NewSphere()
+	x2 := s2.Intersect(r2)
 	if x2[0].T != -6. || x2[1].T != -4.0 {
 		t.Errorf("Ray Sphere intersection at -6, -4, got %0.2f, %0.2f", x2[0].T, x2[1].T)
 	}
 	r3 := NewRayCoor(0, 2, -5, 0, 0, 1)
-	s3 := NewSphere(0, 0, 0, 5)
-	x3 := IntersectRaySphere(r3, s3)
+	s3 := NewSphere()
+	x3 := s3.Intersect(r3)
 	if len(x3) != 0 {
 		t.Errorf("Ray Sphere intersection has no intersection, got %v", x3)
 	}

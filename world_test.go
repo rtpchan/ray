@@ -30,7 +30,7 @@ func TestDefaultWorld(t *testing.T) {
 
 func TestWorldPrepareComputation(t *testing.T) {
 	r := NewRayCoor(0, 0, -5, 0, 0, 1)
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i := Intersection{T: 4, Object: s}
 	comps := PrepareComputation(i, r)
 	if comps.T != i.T {
@@ -52,7 +52,7 @@ func TestWorldPrepareComputation(t *testing.T) {
 
 func TestWorldPrepareComputation1(t *testing.T) {
 	r := NewRayCoor(0, 0, 0, 0, 0, 1)
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i := Intersection{T: 1, Object: s}
 	comps := PrepareComputation(i, r)
 	if !mat.EqualApprox(comps.Point, PointV(0, 0, 1), 0.0001) {
@@ -163,9 +163,9 @@ func TestWorldIsShadow(t *testing.T) {
 func TestWorldShadowHit(t *testing.T) {
 	w := NewWorld()
 	w.Light = append(w.Light, NewPointLight(PointV(0, 0, -10), NewColour(1, 1, 1)))
-	s1 := NewSphere(0, 0, 0, 1)
+	s1 := NewSphere()
 	w.Object = append(w.Object, s1)
-	s2 := NewSphere(0, 0, 0, 1)
+	s2 := NewSphere()
 	s2.Transform = TranslateM(0, 0, 10)
 	w.Object = append(w.Object, s2)
 
@@ -178,7 +178,7 @@ func TestWorldShadowHit(t *testing.T) {
 	}
 
 	r = NewRay(PointV(0, 0, -5), VectorV(0, 0, 1))
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	s.Transform = TranslateM(0, 0, 1)
 	i = Intersection{5, s}
 	comps = PrepareComputation(i, r)

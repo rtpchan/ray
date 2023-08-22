@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestIntersectionHit(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i1 := Intersection{T: 1, Object: s}
 	i2 := Intersection{T: 2, Object: s}
 	is := Intersections{i1, i2}
@@ -18,7 +18,7 @@ func TestIntersectionHit(t *testing.T) {
 }
 
 func TestIntersectionHit2(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i1 := Intersection{T: -1, Object: s}
 	i2 := Intersection{T: 1, Object: s}
 	is := Intersections{i1, i2}
@@ -30,7 +30,7 @@ func TestIntersectionHit2(t *testing.T) {
 }
 
 func TestIntersectionHit3(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i1 := Intersection{T: -2, Object: s}
 	i2 := Intersection{T: -1, Object: s}
 	is := Intersections{i1, i2}
@@ -42,7 +42,7 @@ func TestIntersectionHit3(t *testing.T) {
 }
 
 func TestIntersectionHit4(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	i1 := Intersection{T: 5, Object: s}
 	i2 := Intersection{T: 7, Object: s}
 	i3 := Intersection{T: -3, Object: s}

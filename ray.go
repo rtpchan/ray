@@ -1,8 +1,6 @@
 package main
 
 import (
-	"math"
-
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -34,26 +32,4 @@ func (r *Ray) Transform(m *mat.Dense) *Ray {
 	nv := VectorV(0, 0, 0)
 	nv.MulVec(m, r.Dir)
 	return NewRay(np, nv)
-}
-
-func IntersectRaySphere(r *Ray, s Shape) Intersections {
-	invM := ZeroMatrix()
-	invM.Inverse(s.GetTransform())
-	r = r.Transform(invM)
-
-	rs := SubV(r.Origin, s.GetOrigin())
-	a := DotV(r.Dir, r.Dir)
-	b := 2. * DotV(r.Dir, rs)
-	c := DotV(rs, rs) - 1
-	discriminant := b*b - 4*a*c
-	if discriminant < 0 {
-		return []Intersection{}
-	}
-	t1 := (-b - math.Sqrt(discriminant)) / (2 * a)
-	t2 := (-b + math.Sqrt(discriminant)) / (2 * a)
-
-	return []Intersection{
-		{T: t1, Object: s},
-		{T: t2, Object: s},
-	}
 }

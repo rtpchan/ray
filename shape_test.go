@@ -8,10 +8,10 @@ import (
 
 func TestSphereTransform(t *testing.T) {
 	r := NewRayCoor(0, 0, -5, 0, 0, 1)
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	m := ScaleM(2, 2, 2)
 	s.SetTransform(m)
-	xs := IntersectRaySphere(r, s)
+	xs := s.Intersect(r)
 	if xs[0].T != 3 {
 		t.Errorf("Sphere Transform t should be 3, got %0.2f", xs[0].T)
 	}
@@ -19,17 +19,17 @@ func TestSphereTransform(t *testing.T) {
 		t.Errorf("Sphere Transform t should be 7, got %0.2f", xs[1].T)
 	}
 
-	s = NewSphere(0, 0, 0, 1)
+	s = NewSphere()
 	m = TranslateM(5, 0, 0)
 	s.SetTransform(m)
-	xs = IntersectRaySphere(r, s)
+	xs = s.Intersect(r)
 	if len(xs) != 0 {
 		t.Errorf("Sphere Transform t, no intersection, got %d", len(xs))
 	}
 }
 
 func TestSphereNormal(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	n := s.NormalAt(PointV(0, 0, 1))
 	if !mat.EqualApprox(n, VectorV(0, 0, 1), 0.001) {
 		t.Errorf("Sphere Normal, should be (0,0,1), got %v", n)
@@ -37,7 +37,7 @@ func TestSphereNormal(t *testing.T) {
 }
 
 func TestSphereNormalTransform(t *testing.T) {
-	s := NewSphere(0, 0, 0, 1)
+	s := NewSphere()
 	s.SetTransform(TranslateM(0, 1, 0))
 	n := s.NormalAt(PointV(0, 1.70711, -0.70711))
 	if !mat.EqualApprox(n, VectorV(0, 0.70711, -0.70711), 0.001) {
