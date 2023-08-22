@@ -28,7 +28,7 @@ func TestDefaultWorld(t *testing.T) {
 	}
 }
 
-func TestPrepareComputation(t *testing.T) {
+func TestWorldPrepareComputation(t *testing.T) {
 	r := NewRayCoor(0, 0, -5, 0, 0, 1)
 	s := NewSphere(0, 0, 0, 1)
 	i := Intersection{T: 4, Object: s}
@@ -50,7 +50,7 @@ func TestPrepareComputation(t *testing.T) {
 	}
 }
 
-func TestPrepareComputation1(t *testing.T) {
+func TestWorldPrepareComputation1(t *testing.T) {
 	r := NewRayCoor(0, 0, 0, 0, 0, 1)
 	s := NewSphere(0, 0, 0, 1)
 	i := Intersection{T: 1, Object: s}
@@ -70,7 +70,7 @@ func TestPrepareComputation1(t *testing.T) {
 
 }
 
-func TestColourAt(t *testing.T) {
+func TestWorldColourAt(t *testing.T) {
 	w := NewDefaultWorld()
 	r := NewRayCoor(0, 0, -5, 0, 1, 0)
 	c := w.ColourAt(r)
@@ -96,7 +96,7 @@ func TestColourAt(t *testing.T) {
 
 }
 
-func TestTransform(t *testing.T) {
+func TestWorldTransform(t *testing.T) {
 	from := PointV(0, 0, 0)
 	to := PointV(0, 0, -1)
 	up := VectorV(0, 1, 0)
@@ -130,5 +130,64 @@ func TestTransform(t *testing.T) {
 	})
 	if !mat.EqualApprox(tr, re, 0.0001) {
 		t.Errorf("World Transform, should get %v, got %v", re, tr)
+	}
+}
+
+func TestWorldIsShadow(t *testing.T) {
+	w := NewDefaultWorld()
+	p := PointV(0, 10, 0)
+	s := w.IsShadow(p, w.Light[0])
+	if s {
+		t.Errorf("Test Shadow 1, should be false, got %t", s)
+	}
+
+	p = PointV(10, -10, 10)
+	s = w.IsShadow(p, w.Light[0])
+	if !s {
+		t.Errorf("Test Shadow 2, should be true, got %t", s)
+	}
+
+	p = PointV(-20, 20, -20)
+	s = w.IsShadow(p, w.Light[0])
+	if s {
+		t.Errorf("Test Shadow 3, should be false, got %t", s)
+	}
+
+	p = PointV(-2, 2, -2)
+	s = w.IsShadow(p, w.Light[0])
+	if s {
+		t.Errorf("Test Shadow 4, should be false, got %t", s)
+	}
+}
+
+func TestWorldShadowHit(t *testing.T) {
+	w := NewWorld()
+	w.Light = append(w.Light, NewPointLight(PointV(0, 0, -10), NewColour(1, 1, 1)))
+	s1 := NewSphere(0, 0, 0, 1)
+	w.Object = append(w.Object, s1)
+	s2 := NewSphere(0, 0, 0, 1)
+	s2.Transform = TranslateM(0, 0, 10)
+	w.Object = append(w.Object, s2)
+
+	r := NewRay(PointV(0, 0, 5), VectorV(0, 0, 1))
+	i := Intersection{4, s2}
+	comps := PrepareComputation(i, r)
+	c := w.ShadeHit(comps)
+	if !ColourApprox(c, NewColour(0.1, 0.1, 0.1), 0.001) {
+		t.Errorf("World Shadow Hit, colour should be (0.1,0.1,0.1), got %v", c)
+	}
+
+	r = NewRay(PointV(0, 0, -5), VectorV(0, 0, 1))
+	s := NewSphere(0, 0, 0, 1)
+	s.Transform = TranslateM(0, 0, 1)
+	i = Intersection{5, s}
+	comps = PrepareComputation(i, r)
+	if comps.OverPoint.AtVec(2) >= (-EPSILON / 2.) {
+		t.Errorf("Over point should be greater than neg half EPSILON, got %v",
+			comps.OverPoint.AtVec(2))
+	}
+	if comps.OverPoint.AtVec(2) > comps.Point.AtVec(2) {
+		t.Errorf("Over point should be less than Point, got %t", false)
+
 	}
 }

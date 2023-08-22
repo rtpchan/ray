@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+const (
+	EPSILON float64 = 0.00001
+)
+
 var (
 	idgen *ID
 )
@@ -14,5 +18,5 @@ func init() {
 
 func main() {
 	fmt.Println("ray tracing")
-	Chapter7()
+	Chapter8()
 }

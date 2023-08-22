@@ -33,7 +33,7 @@ func Chapter6() {
 				normal := s.NormalAt(hitPos)
 				toEye := ScaleV(-1, r.Dir)
 
-				col := Lighting(m, light, hitPos, toEye, normal)
+				col := Lighting(m, light, hitPos, toEye, normal, false)
 				canvas.Write(col, wc, hc)
 			}
 			h = h + wallHeight/100.

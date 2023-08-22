@@ -47,8 +47,9 @@ func (w *World) Intersect(r *Ray) Intersections {
 func (w *World) ShadeHit(c *Comps) Colour {
 	col := Black()
 	for _, light := range w.Light {
+		inShadow := w.IsShadow(c.OverPoint, light)
 		lg := Lighting(c.Object.GetMaterial(), light,
-			c.Point, c.EyeV, c.NormalV)
+			c.Point, c.EyeV, c.NormalV, inShadow)
 		col = AddC(lg, col)
 	}
 	return col
@@ -68,13 +69,28 @@ func (w *World) ColourAt(r *Ray) Colour {
 	return Black() // return black if no hit
 }
 
+// test if Point p is in shadow from Light l
+func (w *World) IsShadow(p *mat.VecDense, l *PointLight) bool {
+	v := SubV(l.Position, p)
+	distance := MagnitudeV(v)
+	direction := NormaliseV(v)
+	r := NewRay(p, direction)
+	intersections := w.Intersect(r)
+	h := intersections.Hit()
+	if len(h) > 0 {
+		return h[0].T < distance
+	}
+	return false
+}
+
 type Comps struct {
-	T       float64
-	Object  Shape
-	Point   *mat.VecDense
-	EyeV    *mat.VecDense
-	NormalV *mat.VecDense
-	Inside  bool
+	T         float64
+	Object    Shape
+	Point     *mat.VecDense
+	EyeV      *mat.VecDense
+	NormalV   *mat.VecDense
+	Inside    bool
+	OverPoint *mat.VecDense
 }
 
 // Prepare intersection information
@@ -96,6 +112,7 @@ func PrepareComputation(i Intersection, r *Ray) *Comps {
 		c.Inside = false
 		c.NormalV = nv
 	}
+	c.OverPoint = AddV(c.Point, ScaleV(EPSILON, c.NormalV))
 	return c
 }
 

@@ -17,10 +17,14 @@ func NewPointLight(p *mat.VecDense, i Colour) *PointLight {
 
 // Return colour base on Material, Light, Position, vector to Eye, Normal vector at position
 // Chapter 6 page 66
-func Lighting(m *Material, l *PointLight, p *mat.VecDense, e *mat.VecDense, n *mat.VecDense) Colour {
+func Lighting(m *Material, l *PointLight, p *mat.VecDense, e *mat.VecDense, n *mat.VecDense,
+	shadow bool) Colour {
 	effectiveColour := MulC(m.Colour, l.Intensity)
 	lightV := NormaliseV(SubV(l.Position, p))
 	ambient := ScaleC(effectiveColour, m.Ambient)
+	if shadow {
+		return ambient
+	}
 
 	var diffuse Colour
 	var specular Colour
