@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -13,7 +15,6 @@ type Ray struct {
 func NewRayCoor(x, y, z, i, j, k float64) *Ray {
 	o := PointV(x, y, z)
 	d := NormaliseV(VectorV(i, j, k)) // do not normalise, (for world space ?, page 69)
-	// return &Ray{Origin: o, Dir: VectorV(i, j, k)}
 	return &Ray{Origin: o, Dir: d}
 
 }
@@ -32,4 +33,8 @@ func (r *Ray) Transform(m *mat.Dense) *Ray {
 	nv := VectorV(0, 0, 0)
 	nv.MulVec(m, r.Dir)
 	return NewRay(np, nv)
+}
+
+func (r *Ray) String() string {
+	return fmt.Sprintf("Ray Origin %v, Direction %v", r.Origin, r.Dir)
 }
