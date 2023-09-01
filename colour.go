@@ -13,6 +13,10 @@ func Black() Colour {
 	return NewColour(0, 0, 0)
 }
 
+func White() Colour {
+	return NewColour(1, 1, 1)
+}
+
 func NewColour(r, g, b float64) Colour {
 	return Colour{c: [3]float64{r, g, b}}
 }

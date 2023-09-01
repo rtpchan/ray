@@ -6,6 +6,7 @@ type Material struct {
 	Diffuse   float64
 	Specular  float64
 	Shininess float64 // 10 very shinny, 200 not so shinny
+	Pattern   Pattern
 }
 
 // func NewMaterial(c Colour, a, d, s, sh float64) *Material {
@@ -15,5 +16,5 @@ type Material struct {
 func NewMaterial() *Material {
 
 	return &Material{Colour: NewColour(1, 1, 1),
-		Ambient: 0.1, Diffuse: 0.9, Specular: 0.9, Shininess: 200}
+		Ambient: 0.1, Diffuse: 0.9, Specular: 0.9, Shininess: 200, Pattern: nil}
 }
