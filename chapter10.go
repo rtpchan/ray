@@ -7,8 +7,8 @@ func Chapter10() {
 	exportFilename := "chapter10.ppm"
 
 	plane := NewPlane()
-	plane.Material.Colour = NewColour(1, 0.9, 0.9)
-	plane.Material.Pattern = NewStripePattern(NewColour(1, 0, 0), NewColour(0, 1, 0))
+	plane.Material.Colour = NewColour(1, 0.9, 0.9) // Solid Colour ignored
+	plane.Material.Pattern = NewCheckerPattern(NewColour(1, 0, 0), NewColour(0, 1, 0))
 	plane.Material.Specular = 0
 
 	// floor := NewSphere()
@@ -28,9 +28,12 @@ func Chapter10() {
 	// rightWall.Material = floor.Material
 
 	middle := NewSphere()
-	middle.Transform = TranslateM(-0.5, 1, 0.5)
+	middle.Transform = TranslateM(-0.5, 1, 3.5)
 	middle.Material = NewMaterial()
 	middle.Material.Colour = NewColour(0.1, 1, 0.5)
+	mp := NewRingPattern(NewColour(0, 1, 1), NewColour(1, 1, 0))
+	mp.Transform = ScaleM(0.3, 0.3, 0.3)
+	middle.Material.Pattern = mp
 	middle.Material.Diffuse = 0.7
 	middle.Material.Specular = 0.3
 
