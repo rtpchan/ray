@@ -111,7 +111,7 @@ func (p *CheckerPattern) PatternAt(v *mat.VecDense) Colour {
 	y := math.Floor(v.AtVec(1))
 	z := math.Floor(v.AtVec(2))
 
-	if math.Mod((x+y+z), 2) == 0 {
+	if int(math.Mod(x+y+z, 2.)) == 0 {
 		return p.A
 	}
 	return p.B

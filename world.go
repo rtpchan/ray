@@ -49,7 +49,7 @@ func (w *World) ShadeHit(c *Comps) Colour {
 	for _, light := range w.Light {
 		inShadow := w.IsShadow(c.OverPoint, light)
 		lg := Lighting(c.Object.GetMaterial(), c.Object, light,
-			c.Point, c.EyeV, c.NormalV, inShadow)
+			c.OverPoint, c.EyeV, c.NormalV, inShadow)
 		col = AddC(lg, col)
 	}
 	return col

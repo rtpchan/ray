@@ -25,4 +25,34 @@ func TestPattern(t *testing.T) {
 	if !ColourApprox(c2, NewColour(0, 0, 0), EPSILON) {
 		t.Errorf("Lighting pattern, should be (0,0,0), got %v", c2)
 	}
+
+	p3 := NewCheckerPattern(White(), Black())
+	c3 := p3.PatternAt(PointV(0, 0, 0))
+	if !ColourApprox(c3, White(), EPSILON) {
+		t.Errorf("Checker pattern, should be White, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(0.99, 0, 0))
+	if !ColourApprox(c3, White(), EPSILON) {
+		t.Errorf("Checker pattern, should be White, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(1.01, 0, 0))
+	if !ColourApprox(c3, Black(), EPSILON) {
+		t.Errorf("Checker pattern, should be Black, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(0, 0.99, 0))
+	if !ColourApprox(c3, White(), EPSILON) {
+		t.Errorf("Checker pattern, should be White, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(0, 1.01, 0))
+	if !ColourApprox(c3, Black(), EPSILON) {
+		t.Errorf("Checker pattern, should be Black, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(0, 0, 0.99))
+	if !ColourApprox(c3, White(), EPSILON) {
+		t.Errorf("Checker pattern, should be White, got %v", c3)
+	}
+	c3 = p3.PatternAt(PointV(0, 0, 1.01))
+	if !ColourApprox(c3, Black(), EPSILON) {
+		t.Errorf("Checker pattern, should be Black, got %v", c3)
+	}
 }
