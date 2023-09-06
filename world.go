@@ -44,26 +44,29 @@ func (w *World) Intersect(r *Ray) Intersections {
 }
 
 // Find colour of a hit by a ray, c is pre-computed with PrepareComputation()
-func (w *World) ShadeHit(c *Comps) Colour {
+func (w *World) ShadeHit(c *Comps, remaining int) Colour {
 	col := Black()
 	for _, light := range w.Light {
+		// TODO put in goroutine
 		inShadow := w.IsShadow(c.OverPoint, light)
 		lg := Lighting(c.Object.GetMaterial(), c.Object, light,
 			c.OverPoint, c.EyeV, c.NormalV, inShadow)
 		col = AddC(lg, col)
+		reflexed := w.ReflectedColour(c, remaining)
+		col = AddC(col, reflexed)
 	}
 	return col
 }
 
 // get resulting colour for a ray from the eye
-func (w *World) ColourAt(r *Ray) Colour {
+func (w *World) ColourAt(r *Ray, remaining int) Colour {
 	xs := w.Intersect(r)
 	for _, x := range xs {
 		if x.T < 0 {
 			continue
 		} else {
 			c := PrepareComputation(x, r)
-			return w.ShadeHit(c)
+			return w.ShadeHit(c, remaining)
 		}
 	}
 	return Black() // return black if no hit
@@ -83,12 +86,25 @@ func (w *World) IsShadow(p *mat.VecDense, l *PointLight) bool {
 	return false
 }
 
+func (w *World) ReflectedColour(c *Comps, remaining int) Colour {
+	if remaining < 1 {
+		return Black()
+	}
+	if c.Object.GetMaterial().Reflective == 0 {
+		return Black()
+	}
+	reflectRay := NewRay(c.OverPoint, c.ReflectV)
+	colour := w.ColourAt(reflectRay, remaining-1)
+	return ScaleC(colour, c.Object.GetMaterial().Reflective)
+}
+
 type Comps struct {
 	T         float64
 	Object    Shaper
 	Point     *mat.VecDense
 	EyeV      *mat.VecDense
 	NormalV   *mat.VecDense
+	ReflectV  *mat.VecDense
 	Inside    bool
 	OverPoint *mat.VecDense
 }
@@ -113,6 +129,7 @@ func PrepareComputation(i Intersection, r *Ray) *Comps {
 		c.NormalV = nv
 	}
 	c.OverPoint = AddV(c.Point, ScaleV(EPSILON, c.NormalV))
+	c.ReflectV = ReflectV(r.Dir, c.NormalV)
 	return c
 }
 

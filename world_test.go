@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"testing"
 
 	"gonum.org/v1/gonum/mat"
@@ -73,12 +74,12 @@ func TestWorldPrepareComputation1(t *testing.T) {
 func TestWorldColourAt(t *testing.T) {
 	w := NewDefaultWorld()
 	r := NewRayCoor(0, 0, -5, 0, 1, 0)
-	c := w.ColourAt(r)
+	c := w.ColourAt(r, 0)
 	if !ColourApprox(c, NewColour(0, 0, 0), 0.0001) {
 		t.Errorf("Get Colour in World, should be Black, got %v", c)
 	}
 	r2 := NewRayCoor(0, 0, -5, 0, 0, 1)
-	c2 := w.ColourAt(r2)
+	c2 := w.ColourAt(r2, 0)
 	c3 := NewColour(0.38066, 0.47583, 0.2855)
 	if !ColourApprox(c2, c3, 0.0001) {
 		t.Errorf("Get Colour in World, should be %v, got %v", c3, c2)
@@ -89,7 +90,7 @@ func TestWorldColourAt(t *testing.T) {
 	inner := w.Object[1]
 	inner.GetMaterial().Ambient = 1
 	r4 := NewRayCoor(0, 0, 0.75, 0, 0, -1)
-	c4 := w.ColourAt(r4)
+	c4 := w.ColourAt(r4, 0)
 	if !ColourApprox(c4, inner.GetMaterial().Colour, 0.001) {
 		t.Errorf("Get Colour, should get inner colour %v, got %v", inner.GetMaterial().Colour, c4)
 	}
@@ -172,7 +173,7 @@ func TestWorldShadowHit(t *testing.T) {
 	r := NewRay(PointV(0, 0, 5), VectorV(0, 0, 1))
 	i := Intersection{4, s2}
 	comps := PrepareComputation(i, r)
-	c := w.ShadeHit(comps)
+	c := w.ShadeHit(comps, 0)
 	if !ColourApprox(c, NewColour(0.1, 0.1, 0.1), 0.001) {
 		t.Errorf("World Shadow Hit, colour should be (0.1,0.1,0.1), got %v", c)
 	}
@@ -190,4 +191,67 @@ func TestWorldShadowHit(t *testing.T) {
 		t.Errorf("Over point should be less than Point, got %t", false)
 
 	}
+}
+
+func TestWorldPrepareComputation2(t *testing.T) {
+	r := NewRayCoor(0, 1, -1, 0, -(math.Sqrt2 / 2.), math.Sqrt2/2.)
+	s := NewPlane()
+	i := Intersection{T: math.Sqrt2, Object: s}
+	comps := PrepareComputation(i, r)
+	if !mat.EqualApprox(comps.ReflectV, VectorV(0, math.Sqrt2/2., math.Sqrt2/2.), 0.0001) {
+		t.Errorf("Prepare Computation, expect 0,0.707,0.707, got %v", comps.ReflectV)
+	}
+}
+
+// Test reflections
+func TestWorldReflection(t *testing.T) {
+	w := NewDefaultWorld()
+	r := NewRayCoor(0, 0, 0, 0, 0, 1)
+	s := w.Object[1]
+	s.GetMaterial().Ambient = 1
+	i := Intersection{1, s}
+	comp := PrepareComputation(i, r)
+	c := w.ReflectedColour(comp, 0)
+	if !ColourApprox(c, Black(), EPSILON) {
+		t.Errorf("Reflection, expect black, got %v", c)
+	}
+
+	plane := NewPlane()
+	plane.Material.Reflective = 0.5
+	plane.Transform = TranslateM(0, -1, 0)
+	w.Object = append(w.Object, plane)
+	r = NewRayCoor(0, 0, -3, 0, -(math.Sqrt2 / 2.), math.Sqrt2/2.)
+	i = Intersection{math.Sqrt2, plane}
+	comp = PrepareComputation(i, r)
+	c = w.ReflectedColour(comp, 1)
+	expC := NewColour(0.19032, 0.2379, 0.14274)
+	if !ColourApprox(c, expC, 0.0001) {
+		t.Errorf("Reflection, expect %v, got %v", expC, c)
+	}
+	c = w.ShadeHit(comp, 1)
+	expC = NewColour(0.87677, 0.92436, 0.82918)
+	if !ColourApprox(c, expC, 0.0001) {
+		t.Errorf("Reflection, expect %v, got %v", expC, c)
+	}
+	c = w.ReflectedColour(comp, 0)
+	expC = NewColour(0, 0, 0)
+	if !ColourApprox(c, expC, 0.0001) {
+		t.Errorf("Reflection, expect %v, got %v", expC, c)
+	}
+
+	// Test infinite reflection
+	w = NewWorld()
+	w.Light = append(w.Light, NewPointLight(PointV(0, 0, 0), NewColour(1, 1, 1)))
+	lower := NewPlane()
+	lower.Material.Reflective = 1
+	lower.Transform = TranslateM(0, -1, 0)
+	w.Object = append(w.Object, lower)
+	upper := NewPlane()
+	upper.Material.Reflective = 1
+	upper.Transform = TranslateM(0, 1, 0)
+	w.Object = append(w.Object, upper)
+	r = NewRayCoor(0, 0, 0, 0, 1, 0)
+	_ = w.ColourAt(r, 0)
+	// if this terminate and not crashed, it is fine
+
 }

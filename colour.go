@@ -54,7 +54,7 @@ func (c Colour) B() float64 {
 }
 
 func (c Colour) String() string {
-	return fmt.Sprintf("R %0.2f G %0.2f B %0.2f", c.c[0], c.c[1], c.c[2])
+	return fmt.Sprintf("R %0.5f G %0.5f B %0.5f", c.c[0], c.c[1], c.c[2])
 }
 
 // clamp RGB8 colour to 0 - 255

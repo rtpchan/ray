@@ -70,6 +70,6 @@ func (c *Camera) Render(w *World) *Canvas {
 
 func (c *Camera) onePixel(w *World, cv *Canvas, i, j int) {
 	ray := c.Ray(i, j)
-	colour := w.ColourAt(ray)
+	colour := w.ColourAt(ray, 5) // TODO hardcode maximum 5 reflection
 	cv.Write(colour, i, j)
 }
