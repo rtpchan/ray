@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
 )
 
 type Canvas struct {
 	c    []Colour
 	w, h int
+	mu   sync.Mutex
 }
 
 func NewCanvas(w, h int) *Canvas {
@@ -45,7 +47,9 @@ func (cv *Canvas) At(i, j int) Colour {
 // Write colour to pixel
 func (cv *Canvas) Write(c Colour, i, j int) {
 	index := ToIndex(cv, i, j)
+	cv.mu.Lock()
 	cv.c[index] = c
+	cv.mu.Unlock()
 }
 
 // Write canvas to PPM string

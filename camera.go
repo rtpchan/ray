@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"sync"
 
 	"gonum.org/v1/gonum/mat"
 )
@@ -51,12 +52,24 @@ func (c *Camera) Ray(px, py int) *Ray {
 
 func (c *Camera) Render(w *World) *Canvas {
 	cv := NewCanvas(c.Hsize, c.Vsize)
+	var wg sync.WaitGroup
 	for j := 0; j < c.Vsize; j++ {
 		for i := 0; i < c.Hsize; i++ {
-			ray := c.Ray(i, j)
-			colour := w.ColourAt(ray)
-			cv.Write(colour, i, j)
+			wg.Add(1)
+			i := i
+			j := j
+			go func() {
+				defer wg.Done()
+				c.onePixel(w, cv, i, j)
+			}()
 		}
 	}
+	wg.Wait()
 	return cv
+}
+
+func (c *Camera) onePixel(w *World, cv *Canvas, i, j int) {
+	ray := c.Ray(i, j)
+	colour := w.ColourAt(ray)
+	cv.Write(colour, i, j)
 }

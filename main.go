@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"time"
 )
 
 const (
@@ -18,5 +20,8 @@ func init() {
 
 func main() {
 	fmt.Println("ray tracing")
+	start := time.Now()
 	Chapter10()
+	duration := time.Since(start)
+	log.Printf("Duration %0.2fs\n", duration.Seconds())
 }
